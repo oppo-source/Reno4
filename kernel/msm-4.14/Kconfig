@@ -1,0 +1,78 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# For a description of the syntax of this configuration file,
+# see Documentation/kbuild/kconfig-language.txt.
+#
+mainmenu "Linux/$ARCH $KERNELVERSION Kernel Configuration"
+
+config SRCARCH
+	string
+	option env="SRCARCH"
+
+source "arch/$SRCARCH/Kconfig"
+
+#ifdef VENDOR_EDIT
+#Cong.Dai@Bsp.Kernel.Stability, 2020/04/02, Add for aging test, slub debug config
+config OPPO_AGING_TEST
+	string
+	option env="OPPO_AGING_TEST"
+
+config OPPO_KASAN_TEST
+	string
+	option env="OPPO_KASAN_TEST"
+
+config OPPO_KMEMLEAK_TEST
+	string
+	option env="OPPO_KMEMLEAK_TEST"
+
+config OPPO_SLUB_TEST
+	string
+	option env="OPPO_SLUB_TEST"
+
+config OPPO_PAGEOWNER_TEST
+	string
+	option env="OPPO_PAGEOWNER_TEST"
+
+config OPPO_AGING_DEBUG
+	bool "oppo aging config"
+	select DEBUG_SPINLOCK
+	select DEBUG_MUTEXES
+	select IPC_LOGGING
+	select QCOM_RTB
+	select QCOM_RTB_SEPARATE_CPUS
+	select DEBUG_LIST
+	select SCSI_LOGGING
+	select SCSI_UFSHCD_CMD_LOGGING
+	select KPROBES
+	default y if OPPO_AGING_TEST = "true"
+	default n
+
+config OPPO_KASAN_DEBUG
+	bool "oppo kasan debug"
+	select KASAN
+	select KASAN_EXTRA
+	select KCOV
+	default y if OPPO_KASAN_TEST = "true"
+	default n
+
+config OPPO_KMEMLEAK_DEBUG
+	bool "oppo kmemleak debug"
+	select DEBUG_KMEMLEAK
+	default y if OPPO_KMEMLEAK_TEST = "true"
+	default n
+
+config OPPO_SLUB_DEBUG
+	bool "oppo slub debug"
+	select SLUB_DEBUG
+	select SLUB_DEBUG_ON
+	select SLUB_DEBUG_PANIC_ON
+	default y if OPPO_SLUB_TEST = "true"
+	default n
+
+config OPPO_PAGEOWNER_DEBUG
+	bool "oppo pageowner debug"
+	select PAGE_OWNER
+	select PAGE_OWNER_ENABLE_DEFAULT
+	default y if OPPO_PAGEOWNER_TEST = "true"
+	default n
+#endif
